@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
     build:
       mode === 'production'
         ? {
+          chunkSizeWarningLimit: 2000,
           rollupOptions: {
             plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
           },
