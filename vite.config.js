@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
             plugins: [
               inject({ 
                 Buffer: ['buffer', 'Buffer'],
-                process: 'process/browser'
+                process: 'process'
               })
             ],
           },
@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
         : undefined,
 
     optimizeDeps: {
-      include: ['@emotion/styled'],
+      include: ['@emotion/styled', 'buffer', 'process'],
       esbuildOptions: {
         // Node.js global to browser globalThis
         define: {
@@ -37,7 +37,8 @@ export default defineConfig(({ mode }) => {
         // Enable esbuild polyfill plugins
         plugins: [
           NodeGlobalsPolyfillPlugin({
-            buffer: true
+            buffer: true,
+            process: true
           })
         ]
       }
@@ -48,7 +49,6 @@ export default defineConfig(({ mode }) => {
         stream: 'stream-browserify',
         http: 'stream-http',
         https: 'https-browserify',
-        process: 'process/browser',
         buffer: 'buffer'
       }
     },
