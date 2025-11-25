@@ -25,6 +25,16 @@ export default defineConfig(({ mode }) => {
           rollupOptions: {
             plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
           },
+          output: {
+            manualChunks(id) {
+              if (id.includes('node_modules')) {
+                return 'vendor';
+              }
+              if (id.includes('ledger') || id.includes('TransportWebHID') || id.includes('@solana')) {
+                return 'wallet';
+              }
+            }
+          }
         }
         : undefined,
 
