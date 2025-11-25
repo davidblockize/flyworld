@@ -9,32 +9,21 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     base: "./",
-    define: 
-      mode === 'development' ?
-        {
-          'process.env.SOME_KEY': JSON.stringify(env.SOME_KEY),
-          'global': {}
-        } : {
-          'process.env': {},
-          'process.env.SOME_KEY': JSON.stringify(env.SOME_KEY),
-        },
+    define: {
+      'global': 'globalThis',
+      'process.env': {},
+    },
     build:
       mode === 'production'
         ? {
-          chunkSizeWarningLimit: 20000,
           rollupOptions: {
-            plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
+            plugins: [
+              inject({ 
+                Buffer: ['buffer', 'Buffer'],
+                process: 'process/browser'
+              })
+            ],
           },
-          output: {
-            manualChunks(id) {
-              if (id.includes('node_modules')) {
-                return 'vendor';
-              }
-              if (id.includes('ledger') || id.includes('TransportWebHID') || id.includes('@solana')) {
-                return 'wallet';
-              }
-            }
-          }
         }
         : undefined,
 
@@ -55,7 +44,12 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        crypto: 'crypto-browserify'
+        crypto: 'crypto-browserify',
+        stream: 'stream-browserify',
+        http: 'stream-http',
+        https: 'https-browserify',
+        process: 'process/browser',
+        buffer: 'buffer'
       }
     },
     plugins:
